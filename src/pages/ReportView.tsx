@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Share2, Copy } from 'lucide-react';
+import { Share2, Copy } from 'lucide-react';
 import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
@@ -108,12 +108,9 @@ const ReportView = () => {
         <div className="text-center space-y-4">
           <h1 className="text-2xl font-bold text-foreground">周报不存在</h1>
           <p className="text-muted-foreground">您访问的周报不存在或已被删除</p>
-          <Link to="/dashboard">
-            <Button variant="outline">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              返回Dashboard
-            </Button>
-          </Link>
+          <Button variant="outline" onClick={() => window.close()}>
+            关闭窗口
+          </Button>
         </div>
       </div>
     );
@@ -123,14 +120,7 @@ const ReportView = () => {
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <Link to="/dashboard">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              返回Dashboard
-            </Button>
-          </Link>
-          
+        <div className="flex items-center justify-end">
           <Button onClick={handleShare} variant="outline" size="sm">
             <Share2 className="h-4 w-4 mr-2" />
             分享
