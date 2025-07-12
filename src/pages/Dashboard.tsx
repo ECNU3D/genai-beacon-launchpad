@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Upload, Calendar, FileText, Plus } from 'lucide-react';
+import { Upload, Calendar, FileText, Plus, ExternalLink } from 'lucide-react';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
@@ -279,17 +280,28 @@ const Dashboard = () => {
                       {reports.map((report) => (
                         <div
                           key={report.id}
-                          className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                          className={`p-3 border rounded-lg cursor-pointer transition-colors group ${
                             selectedReport?.id === report.id 
                               ? 'bg-primary text-primary-foreground' 
                               : 'hover:bg-muted/50'
                           }`}
                           onClick={() => setSelectedReport(report)}
                         >
-                          <h4 className="font-medium text-sm">{report.title}</h4>
-                          <p className="text-xs opacity-75">
-                            {formatWeekRange(report.week_start_date, report.week_end_date)}
-                          </p>
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <h4 className="font-medium text-sm">{report.title}</h4>
+                              <p className="text-xs opacity-75">
+                                {formatWeekRange(report.week_start_date, report.week_end_date)}
+                              </p>
+                            </div>
+                            <Link 
+                              to={`/report/${report.id}`}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity ml-2"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                            </Link>
+                          </div>
                         </div>
                       ))}
                     </div>
