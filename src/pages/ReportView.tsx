@@ -117,10 +117,10 @@ const ReportView = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen bg-background p-2 md:p-6">
+      <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end px-2">
           <Button onClick={handleShare} variant="outline" size="sm">
             <Share2 className="h-4 w-4 mr-2" />
             分享
@@ -128,14 +128,14 @@ const ReportView = () => {
         </div>
 
         {/* Report Content */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
+        <div className="bg-background">
+          <div className="p-4 md:p-6">
+            <div className="flex items-center justify-between mb-6">
               <div>
-                <CardTitle className="text-2xl">{report.title}</CardTitle>
-                <CardDescription className="text-lg mt-2">
+                <h1 className="text-2xl font-semibold leading-none tracking-tight">{report.title}</h1>
+                <p className="text-lg mt-2 text-muted-foreground">
                   {formatWeekRange(report.week_start_date, report.week_end_date)}
-                </CardDescription>
+                </p>
               </div>
               <Button 
                 variant="ghost" 
@@ -145,17 +145,15 @@ const ReportView = () => {
                 <Copy className="h-4 w-4" />
               </Button>
             </div>
-          </CardHeader>
-          <CardContent>
             <div 
               className="prose prose-sm max-w-none"
               dangerouslySetInnerHTML={{ __html: report.content }}
             />
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Footer */}
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-center text-sm text-muted-foreground px-2">
           发布时间: {format(new Date(report.created_at), 'yyyy年MM月dd日 HH:mm', { locale: zhCN })}
         </div>
       </div>
