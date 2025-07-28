@@ -128,7 +128,14 @@ function stripHtml(html: string): string {
   // Remove script tags and their content
   cleaned = cleaned.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
   
-  // Remove all HTML tags
+  // Convert certain HTML elements to line breaks for better formatting
+  cleaned = cleaned.replace(/<\/p>/gi, '\n\n');
+  cleaned = cleaned.replace(/<br\s*\/?>/gi, '\n');
+  cleaned = cleaned.replace(/<\/div>/gi, '\n');
+  cleaned = cleaned.replace(/<\/h[1-6]>/gi, '\n\n');
+  cleaned = cleaned.replace(/<\/li>/gi, '\n');
+  
+  // Remove all remaining HTML tags
   cleaned = cleaned.replace(/<[^>]*>/g, '');
   
   // Decode HTML entities
@@ -140,27 +147,28 @@ function stripHtml(html: string): string {
     .replace(/&#39;/g, "'")
     .replace(/&nbsp;/g, ' ');
   
-  // Clean up whitespace and remove CSS-like content
-  cleaned = cleaned
-    .replace(/\s+/g, ' ')
-    .replace(/[{}]/g, ' ')
-    .replace(/[;:]/g, ' ')
-    .trim();
-  
-  // Remove lines that look like CSS or code
+  // Split into lines and filter out CSS-like content
   const lines = cleaned.split('\n');
   const filteredLines = lines.filter(line => {
     const trimmedLine = line.trim();
+    if (trimmedLine.length === 0) return false;
+    
     // Skip lines that look like CSS properties or selectors
     if (trimmedLine.includes(':') && (trimmedLine.includes('px') || trimmedLine.includes('#') || trimmedLine.includes('margin') || trimmedLine.includes('padding'))) {
       return false;
     }
     // Skip lines with common CSS keywords
-    if (trimmedLine.match(/^(body|header|container|\.[\w-]+)/)) {
+    if (trimmedLine.match(/^(body|header|container|\.[\w-]+|\{|\})/)) {
       return false;
     }
-    return trimmedLine.length > 0;
+    return true;
   });
   
-  return filteredLines.join(' ').replace(/\s+/g, ' ').trim();
+  // Join with proper spacing and clean up
+  return filteredLines
+    .join('\n')
+    .replace(/\n\s*\n\s*\n/g, '\n\n') // Replace multiple newlines with double newlines
+    .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+    .replace(/\n /g, '\n') // Remove spaces after newlines
+    .trim();
 }
