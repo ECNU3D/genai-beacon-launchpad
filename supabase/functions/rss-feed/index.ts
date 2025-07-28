@@ -45,9 +45,7 @@ serve(async (req) => {
     // Get the current request origin for proper links
     const url = new URL(req.url);
     const origin = req.headers.get('origin') || url.origin.replace('/functions/v1/rss-feed', '');
-    const siteOrigin = origin.includes('supabase.co') 
-      ? 'https://loving-ai-weekly.lovable.app' 
-      : origin;
+    const siteOrigin = 'https://genai-beacon-launchpad.lovable.app';
 
     // Combine and sort all reports by creation date
     const allReports = [
@@ -81,7 +79,7 @@ serve(async (req) => {
 });
 
 function generateRSSXML(reports: any[]) {
-  const siteUrl = 'https://loving-ai-weekly.lovable.app';
+  const siteUrl = 'https://genai-beacon-launchpad.lovable.app';
   const currentDate = new Date().toUTCString();
 
   const items = reports.map(report => {
