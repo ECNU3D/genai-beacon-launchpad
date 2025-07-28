@@ -42,18 +42,25 @@ serve(async (req) => {
       throw specialError;
     }
 
+    // Get the current request origin for proper links
+    const url = new URL(req.url);
+    const origin = req.headers.get('origin') || url.origin.replace('/functions/v1/rss-feed', '');
+    const siteOrigin = origin.includes('supabase.co') 
+      ? 'https://loving-ai-weekly.lovable.app' 
+      : origin;
+
     // Combine and sort all reports by creation date
     const allReports = [
       ...(weeklyReports || []).map(report => ({
         ...report,
         type: 'weekly',
-        link: `https://hgbktacdwybydcycppsf.supabase.co/report/${report.id}`,
+        link: `${siteOrigin}/report/${report.id}`,
         description: `AI周报 - ${report.week_start_date} 至 ${report.week_end_date}`
       })),
       ...(specialReports || []).map(report => ({
         ...report,
         type: 'special',
-        link: `https://hgbktacdwybydcycppsf.supabase.co/report/special/${report.id}`,
+        link: `${siteOrigin}/report/special/${report.id}`,
         description: report.category ? `特别报告 - ${report.category}` : '特别报告'
       }))
     ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
@@ -74,7 +81,7 @@ serve(async (req) => {
 });
 
 function generateRSSXML(reports: any[]) {
-  const siteUrl = 'https://hgbktacdwybydcycppsf.supabase.co';
+  const siteUrl = 'https://loving-ai-weekly.lovable.app';
   const currentDate = new Date().toUTCString();
 
   const items = reports.map(report => {

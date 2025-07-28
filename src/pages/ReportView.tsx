@@ -18,9 +18,18 @@ interface WeeklyReport {
   updated_at: string;
 }
 
+interface SpecialReport {
+  id: string;
+  title: string;
+  content: string;
+  category?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 const ReportView = () => {
   const { id } = useParams<{ id: string }>();
-  const [report, setReport] = useState<WeeklyReport | null>(null);
+  const [report, setReport] = useState<WeeklyReport | SpecialReport | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -32,19 +41,35 @@ const ReportView = () => {
 
   const fetchReport = async (reportId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('weekly_reports')
-        .select('*')
-        .eq('id', reportId)
-        .single();
-
-      if (error) throw error;
-      setReport(data);
+      // Check if this is a special report route
+      const isSpecialReport = window.location.pathname.includes('/report/special/');
+      
+      if (isSpecialReport) {
+        // Fetch from special_reports table using any type to bypass TypeScript error
+        const { data, error } = await (supabase as any)
+          .from('special_reports')
+          .select('*')
+          .eq('id', reportId)
+          .single();
+          
+        if (error) throw error;
+        setReport(data as SpecialReport);
+      } else {
+        // Fetch from weekly_reports table
+        const { data, error } = await supabase
+          .from('weekly_reports')
+          .select('*')
+          .eq('id', reportId)
+          .single();
+          
+        if (error) throw error;
+        setReport(data as WeeklyReport);
+      }
     } catch (error) {
       console.error('Error fetching report:', error);
       toast({
         title: "错误",
-        description: "获取周报失败",
+        description: "获取报告失败",
         variant: "destructive",
       });
     } finally {
@@ -106,8 +131,8 @@ const ReportView = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-4">
-          <h1 className="text-2xl font-bold text-foreground">周报不存在</h1>
-          <p className="text-muted-foreground">您访问的周报不存在或已被删除</p>
+          <h1 className="text-2xl font-bold text-foreground">报告不存在</h1>
+          <p className="text-muted-foreground">您访问的报告不存在或已被删除</p>
           <Button variant="outline" onClick={() => window.close()}>
             关闭窗口
           </Button>
@@ -134,7 +159,10 @@ const ReportView = () => {
               <div>
                 <h1 className="text-2xl font-semibold leading-none tracking-tight">{report.title}</h1>
                 <p className="text-lg mt-2 text-muted-foreground">
-                  {formatWeekRange(report.week_start_date, report.week_end_date)}
+                  {'week_start_date' in report 
+                    ? formatWeekRange(report.week_start_date, report.week_end_date)
+                    : ('category' in report && report.category) ? `特别报告 - ${report.category}` : '特别报告'
+                  }
                 </p>
               </div>
               <Button 
