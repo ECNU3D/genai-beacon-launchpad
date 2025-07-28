@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Upload, Plus, ExternalLink, FileText, Calendar, Settings } from 'lucide-react';
+import { Upload, Plus, ExternalLink, FileText, Calendar, Settings, Rss } from 'lucide-react';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
@@ -152,6 +152,15 @@ const Index = () => {
             </div>
             
             <div className="flex items-center space-x-3">
+              <Button
+                variant="outline"
+                onClick={() => window.open('https://hgbktacdwybydcycppsf.supabase.co/functions/v1/rss-feed', '_blank')}
+                className="hidden sm:flex"
+              >
+                <Rss className="h-4 w-4 mr-2" />
+                RSS订阅
+              </Button>
+              
               <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className="shadow-primary">
@@ -244,6 +253,16 @@ const Index = () => {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               探索AI领域最新动态，获取前沿技术资讯与深度分析
             </p>
+            <div className="flex justify-center mt-6">
+              <Button
+                variant="outline"
+                onClick={() => window.open('https://hgbktacdwybydcycppsf.supabase.co/functions/v1/rss-feed', '_blank')}
+                className="flex items-center space-x-2"
+              >
+                <Rss className="h-4 w-4" />
+                <span>RSS订阅周报</span>
+              </Button>
+            </div>
           </div>
 
           {/* Reports Grid */}
