@@ -5,12 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Upload, Plus, ExternalLink, FileText, Calendar, Rss } from 'lucide-react';
+import { Upload, Plus, ExternalLink, FileText, Calendar, Settings } from 'lucide-react';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
-import RSSManager from '@/components/RSSManager';
-import RSSInfo from '@/components/RSSInfo';
 
 interface WeeklyReport {
   id: string;
@@ -29,7 +27,6 @@ const Index = () => {
   const [selectedWeek, setSelectedWeek] = useState(new Date());
   const [loading, setLoading] = useState(false);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('reports');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -107,10 +104,10 @@ const Index = () => {
         description: "周报创建成功",
       });
 
-      fetchReports();
       setTitle('');
       setSelectedFile(null);
       setUploadDialogOpen(false);
+      fetchReports();
     } catch (error: any) {
       console.error('Error creating report:', error);
       if (error.code === '23505') {
@@ -155,14 +152,6 @@ const Index = () => {
             </div>
             
             <div className="flex items-center space-x-3">
-              <Button 
-                variant="outline" 
-                onClick={() => window.open(`${window.location.origin}/functions/v1/rss-feed`, '_blank')}
-                className="hidden sm:flex"
-              >
-                <Rss className="h-4 w-4 mr-2" />
-                RSS订阅
-              </Button>
               <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className="shadow-primary">
@@ -250,101 +239,62 @@ const Index = () => {
           {/* Hero Section */}
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-bold text-foreground">
-              人工智能报告平台
+              人工智能周报
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               探索AI领域最新动态，获取前沿技术资讯与深度分析
             </p>
           </div>
 
-          {/* Reports Section */}
-          <div className="w-full">
-            <div className="flex items-center justify-center mb-8">
-              <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
-                <button
-                  onClick={() => setActiveTab('reports')}
-                  className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-                    activeTab === 'reports' 
-                      ? 'bg-background text-foreground shadow-sm' 
-                      : 'hover:bg-background/50'
-                  }`}
+          {/* Reports Grid */}
+          {reports.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {reports.map((report) => (
+                <Card 
+                  key={report.id} 
+                  className="shadow-card hover:shadow-primary transition-all duration-300 cursor-pointer group card-gradient border-border/50"
+                  onClick={() => openReport(report.id)}
                 >
-                  <FileText className="h-4 w-4 mr-2" />
-                  AI周报
-                </button>
-                <button
-                  onClick={() => setActiveTab('rss-subscribe')}
-                  className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-                    activeTab === 'rss-subscribe' 
-                      ? 'bg-background text-foreground shadow-sm' 
-                      : 'hover:bg-background/50'
-                  }`}
-                >
-                  <Rss className="h-4 w-4 mr-2" />
-                  订阅周报
-                </button>
-              </div>
-            </div>
-
-            {activeTab === 'reports' && (
-              <>
-                {/* Weekly Reports */}
-                {reports.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {reports.map((report) => (
-                      <Card 
-                        key={report.id} 
-                        className="shadow-card hover:shadow-primary transition-all duration-300 cursor-pointer group card-gradient border-border/50"
-                        onClick={() => openReport(report.id)}
-                      >
-                        <CardHeader className="pb-3">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <CardTitle className="text-lg font-semibold group-hover:text-primary transition-colors">
-                                {report.title}
-                              </CardTitle>
-                              <CardDescription className="text-sm mt-1">
-                                {formatWeekRange(report.week_start_date, report.week_end_date)}
-                              </CardDescription>
-                            </div>
-                            <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
-                          </div>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <div className="flex items-center space-x-1">
-                              <Calendar className="h-3 w-3" />
-                              <span>{format(new Date(report.created_at), 'MM月dd日', { locale: zhCN })}</span>
-                            </div>
-                            <div className="w-2 h-2 rounded-full bg-primary opacity-60 group-hover:opacity-100 transition-opacity"></div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-16">
-                    <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-                      <Calendar className="h-8 w-8 text-muted-foreground" />
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg font-semibold group-hover:text-primary transition-colors">
+                          {report.title}
+                        </CardTitle>
+                        <CardDescription className="text-sm mt-1">
+                          {formatWeekRange(report.week_start_date, report.week_end_date)}
+                        </CardDescription>
+                      </div>
+                      <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">暂无周报</h3>
-                    <p className="text-muted-foreground mb-6">
-                      开始创建您的第一个AI周报吧
-                    </p>
-                    <Button onClick={() => setUploadDialogOpen(true)} className="shadow-primary">
-                      <Plus className="h-4 w-4 mr-2" />
-                      创建第一个周报
-                    </Button>
-                  </div>
-                )}
-              </>
-            )}
-
-            {activeTab === 'rss-subscribe' && (
-              <RSSInfo />
-            )}
-
-          </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="h-3 w-3" />
+                        <span>{format(new Date(report.created_at), 'MM月dd日', { locale: zhCN })}</span>
+                      </div>
+                      <div className="w-2 h-2 rounded-full bg-primary opacity-60 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
+                <FileText className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">暂无周报</h3>
+              <p className="text-muted-foreground mb-6">
+                开始创建您的第一个AI周报吧
+              </p>
+              <Button onClick={() => setUploadDialogOpen(true)} className="shadow-primary">
+                <Plus className="h-4 w-4 mr-2" />
+                创建第一个周报
+              </Button>
+            </div>
+          )}
         </div>
       </main>
     </div>
