@@ -120,5 +120,47 @@ function generateRSSXML(reports: any[]) {
 }
 
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  if (!html) return '';
+  
+  // Remove style tags and their content
+  let cleaned = html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  
+  // Remove script tags and their content
+  cleaned = cleaned.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  
+  // Remove all HTML tags
+  cleaned = cleaned.replace(/<[^>]*>/g, '');
+  
+  // Decode HTML entities
+  cleaned = cleaned
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+  
+  // Clean up whitespace and remove CSS-like content
+  cleaned = cleaned
+    .replace(/\s+/g, ' ')
+    .replace(/[{}]/g, ' ')
+    .replace(/[;:]/g, ' ')
+    .trim();
+  
+  // Remove lines that look like CSS or code
+  const lines = cleaned.split('\n');
+  const filteredLines = lines.filter(line => {
+    const trimmedLine = line.trim();
+    // Skip lines that look like CSS properties or selectors
+    if (trimmedLine.includes(':') && (trimmedLine.includes('px') || trimmedLine.includes('#') || trimmedLine.includes('margin') || trimmedLine.includes('padding'))) {
+      return false;
+    }
+    // Skip lines with common CSS keywords
+    if (trimmedLine.match(/^(body|header|container|\.[\w-]+)/)) {
+      return false;
+    }
+    return trimmedLine.length > 0;
+  });
+  
+  return filteredLines.join(' ').replace(/\s+/g, ' ').trim();
 }
