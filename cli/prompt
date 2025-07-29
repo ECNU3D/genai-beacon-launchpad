@@ -1,0 +1,30 @@
+我需要你帮我把下面的网站，通过https://r.jina.ai/转换成markdown，并保存到本地
+https://buttondown.com/agent-k/archive/llm-daily-{month}-{day}-2025/
+month是july，day是06到12
+通过
+https://r.jina.ai/buttondown.com/agent-k/archive/llm-daily-{month}-{day}-2025/ 就可以吧网站转换成markdown
+全部转换成markdown并保存到本地以后，请翻译成中文
+
+Let's build another script, which will download the daily report at:
+https://buttondown.com/agent-k/archive/llm-daily-{month}-{day}-2025/
+month could be july for example, day could be 06 for example
+You need to use 
+https://r.jina.ai/buttondown.com/agent-k/archive/llm-daily-{month}-{day}-2025/ to convert the website to markdown and save if to local folder.
+The script should accept month and day as arguments, then you pull the full week of daily reports. for example, if month is july and day is 06, you should pull the daily reports from 06 to 12. if the report is not available, you should skip it and print a warning message. And the folder name should be {month}-{day}
+
+
+
+
+
+
+
+阅读一下 @7.6-7.12/ 下面所有的文件，归纳总结成一个简介清晰的新闻简报单页网页应用，保存在index.html里，内容需要全部翻译成中文，保留消息的原始link，让用户可以阅读原始的新闻。记得把所有的信息汇总不需要按照日期分开，不要遗漏。必要时可以用图表归纳总结。需要包含以下章节：
+HIGHLIGHTS
+BUSINESS
+PRODUCTS
+TECHNOLOGY
+RESEARCH
+
+- Open Source Projects
+- Models & Datasets 
+- Developer Tools & Demos

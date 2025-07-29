@@ -1,0 +1,23 @@
+{
+  "selection_limits": {
+    "HIGHLIGHTS": 6,
+    "BUSINESS": {
+      "Funding & Investment": 2,
+      "Company Updates": 2,
+      "Regulatory Developments": 2,
+      "Market Trends": 2
+    },
+    "PRODUCTS": 6,
+    "TECHNOLOGY": {
+      "Open Source Projects": 2,
+      "Models & Datasets": 2,
+      "Developer Tools & Demos": 2
+    },
+    "RESEARCH": {
+      "Paper of the Week": 2,
+      "Notable Research": 3
+    }
+  },
+  "default_limit": 5,
+  "description": "Configuration file for polish_json_content.py to specify the number of top items to select for each section. If a section is not specified, it will use the default_limit value."
+} 

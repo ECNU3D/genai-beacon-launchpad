@@ -1,0 +1,14 @@
+requests>=2.32.0
+google-genai>=0.8.0
+
+# A2A Agent Infrastructure Dependencies
+starlette>=0.41.0
+uvicorn>=0.34.0
+fastapi>=0.115.0
+python-jose[cryptography]>=3.3.0
+python-multipart>=0.0.19
+aiofiles>=24.1.0
+watchfiles>=0.24.0
+
+# Testing dependencies
+httpx>=0.28.0 

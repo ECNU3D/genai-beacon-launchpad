@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Simplified LLM Daily Report",
+  "description": "A simplified JSON schema for the LLM Daily report.",
+  "type": "object",
+  "properties": {
+    "HIGHLIGHTS": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/item"
+      }
+    },
+    "BUSINESS": {
+      "type": "object",
+      "properties": {
+        "Funding & Investment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          }
+        },
+        "Company Updates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          }
+        },
+        "Regulatory Developments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          }
+        },
+        "Market Trends": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          }
+        }
+      }
+    },
+    "PRODUCTS": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/item"
+      }
+    },
+    "TECHNOLOGY": {
+      "type": "object",
+      "properties": {
+        "Open Source Projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          }
+        },
+        "Models & Datasets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          }
+        },
+        "Developer Tools & Demos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          }
+        }
+      }
+    },
+    "RESEARCH": {
+      "type": "object",
+      "properties": {
+        "Paper of the Week": {
+          "$ref": "#/definitions/item"
+        },
+        "Notable Research": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "item": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "reference_link": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "description"
+      ]
+    }
+  }
+}
