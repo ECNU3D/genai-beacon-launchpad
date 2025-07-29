@@ -241,4 +241,3 @@ This project is open source and available under the MIT License.
 
 - **Live Application**: https://genai-beacon-launchpad.lovable.app
 - **RSS Feed**: https://hgbktacdwybydcycppsf.supabase.co/functions/v1/rss-feed
-- **Lovable Project**: https://lovable.dev/projects/29b8f8a6-6058-4dd8-85b5-f814e0c7bf21
