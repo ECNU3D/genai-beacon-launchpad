@@ -1,0 +1,39 @@
+{
+  "title": "GenAI 周报平台",
+  "subtitle": "人工智能周报",
+  "description": "探索AI领域最新动态，获取前沿技术资讯与深度分析",
+  "newReport": "新建周报",
+  "createReport": "创建新周报",
+  "uploadDescription": "上传HTML文件来创建新的周报",
+  "reportTitle": "周报标题",
+  "titlePlaceholder": "请输入周报标题",
+  "selectPeriod": "选择周期",
+  "selectLanguage": "选择语言",
+  "previousWeek": "上一周",
+  "nextWeek": "下一周",
+  "uploadFile": "上传HTML文件",
+  "selectedFile": "已选择",
+  "creating": "创建中...",
+  "createReportButton": "创建周报",
+  "rssSubscribe": "RSS订阅",
+  "rssSubscribeWeekly": "RSS订阅周报",
+  "copyRSSLink": "复制RSS链接",
+  "noReports": "暂无周报",
+  "noReportsDescription": "开始创建您的第一个AI周报吧",
+  "createFirstReport": "创建第一个周报",
+  "language": {
+    "zh-CN": "中文",
+    "en": "English"
+  },
+  "messages": {
+    "success": "成功",
+    "error": "错误",
+    "reportCreated": "周报创建成功",
+    "reportCreateFailed": "创建周报失败",
+    "weekExists": "该周已存在周报，请选择其他周或更新现有周报",
+    "selectHtmlFile": "请选择HTML文件",
+    "fetchReportsFailed": "获取周报列表失败",
+    "rssLinkCopied": "RSS链接已复制到剪贴板",
+    "fillTitle": "请填写标题并选择HTML文件"
+  }
+}

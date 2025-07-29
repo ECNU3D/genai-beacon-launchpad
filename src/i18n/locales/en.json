@@ -1,0 +1,39 @@
+{
+  "title": "GenAI Weekly Platform",
+  "subtitle": "Artificial Intelligence Weekly",
+  "description": "Explore the latest developments in AI, get cutting-edge tech insights and in-depth analysis",
+  "newReport": "New Report",
+  "createReport": "Create New Report",
+  "uploadDescription": "Upload HTML file to create a new weekly report",
+  "reportTitle": "Report Title",
+  "titlePlaceholder": "Enter report title",
+  "selectPeriod": "Select Period",
+  "selectLanguage": "Select Language", 
+  "previousWeek": "Previous Week",
+  "nextWeek": "Next Week",
+  "uploadFile": "Upload HTML File",
+  "selectedFile": "Selected",
+  "creating": "Creating...",
+  "createReportButton": "Create Report",
+  "rssSubscribe": "RSS Subscribe",
+  "rssSubscribeWeekly": "RSS Subscribe Weekly",
+  "copyRSSLink": "Copy RSS Link",
+  "noReports": "No Reports",
+  "noReportsDescription": "Start creating your first AI weekly report",
+  "createFirstReport": "Create First Report",
+  "language": {
+    "zh-CN": "中文",
+    "en": "English"
+  },
+  "messages": {
+    "success": "Success",
+    "error": "Error",
+    "reportCreated": "Report created successfully",
+    "reportCreateFailed": "Failed to create report",
+    "weekExists": "A report already exists for this week, please select another week or update the existing report",
+    "selectHtmlFile": "Please select an HTML file",
+    "fetchReportsFailed": "Failed to fetch reports list",
+    "rssLinkCopied": "RSS link copied to clipboard",
+    "fillTitle": "Please fill in the title and select an HTML file"
+  }
+}

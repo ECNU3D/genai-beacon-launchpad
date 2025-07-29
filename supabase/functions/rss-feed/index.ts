@@ -18,10 +18,15 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch weekly reports
+    // Get language from query parameters, default to Chinese
+    const url = new URL(req.url);
+    const language = url.searchParams.get('lang') || 'zh-CN';
+
+    // Fetch weekly reports for the specified language
     const { data: weeklyReports, error: weeklyError } = await supabase
       .from('weekly_reports')
       .select('*')
+      .eq('language', language)
       .order('created_at', { ascending: false })
       .limit(20);
 
@@ -48,23 +53,31 @@ serve(async (req) => {
     const siteOrigin = 'https://genai-beacon-launchpad.lovable.app';
 
     // Combine and sort all reports by creation date
+    const weeklyLabel = language === 'zh-CN' ? 'AI周报' : 'AI Weekly';
+    const specialLabel = language === 'zh-CN' ? '特别报告' : 'Special Report';
+    const weeklyDesc = language === 'zh-CN' ? 
+      (report: any) => `AI周报 - ${report.week_start_date} 至 ${report.week_end_date}` :
+      (report: any) => `AI Weekly - ${report.week_start_date} to ${report.week_end_date}`;
+
     const allReports = [
       ...(weeklyReports || []).map(report => ({
         ...report,
         type: 'weekly',
         link: `${siteOrigin}/report/${report.id}`,
-        description: `AI周报 - ${report.week_start_date} 至 ${report.week_end_date}`
+        description: weeklyDesc(report)
       })),
       ...(specialReports || []).map(report => ({
         ...report,
         type: 'special',
         link: `${siteOrigin}/report/special/${report.id}`,
-        description: report.category ? `特别报告 - ${report.category}` : '特别报告'
+        description: report.category ? 
+          `${specialLabel} - ${report.category}` : 
+          specialLabel
       }))
     ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     // Generate RSS XML
-    const rssXml = generateRSSXML(allReports);
+    const rssXml = generateRSSXML(allReports, language);
 
     return new Response(rssXml, {
       headers: corsHeaders,
@@ -78,9 +91,17 @@ serve(async (req) => {
   }
 });
 
-function generateRSSXML(reports: any[]) {
+function generateRSSXML(reports: any[], language: string = 'zh-CN') {
   const siteUrl = 'https://genai-beacon-launchpad.lovable.app';
   const currentDate = new Date().toUTCString();
+
+  const title = language === 'zh-CN' ? 'GenAI 周报平台' : 'GenAI Weekly Platform';
+  const description = language === 'zh-CN' 
+    ? '探索AI领域最新动态，获取前沿技术资讯与深度分析'
+    : 'Explore the latest developments in AI, get cutting-edge tech insights and in-depth analysis';
+  const team = language === 'zh-CN' ? 'GenAI 周报团队' : 'GenAI Weekly Team';
+  const weeklyLabel = language === 'zh-CN' ? 'AI周报' : 'AI Weekly';
+  const specialLabel = language === 'zh-CN' ? '特别报告' : 'Special Report';
 
   const items = reports.map(report => {
     const pubDate = new Date(report.created_at).toUTCString();
@@ -93,25 +114,25 @@ function generateRSSXML(reports: any[]) {
       <description><![CDATA[${report.description}\n\n${cleanContent}]]></description>
       <guid isPermaLink="true">${report.link}</guid>
       <pubDate>${pubDate}</pubDate>
-      <category><![CDATA[${report.type === 'weekly' ? 'AI周报' : '特别报告'}]]></category>
+      <category><![CDATA[${report.type === 'weekly' ? weeklyLabel : specialLabel}]]></category>
     </item>`;
   }).join('');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title><![CDATA[GenAI 周报平台]]></title>
+    <title><![CDATA[${title}]]></title>
     <link>${siteUrl}</link>
-    <description><![CDATA[探索AI领域最新动态，获取前沿技术资讯与深度分析]]></description>
-    <language>zh-CN</language>
+    <description><![CDATA[${description}]]></description>
+    <language>${language}</language>
     <lastBuildDate>${currentDate}</lastBuildDate>
-    <atom:link href="${siteUrl}/functions/v1/rss-feed" rel="self" type="application/rss+xml" />
-    <managingEditor>noreply@genai-weekly.com (GenAI 周报团队)</managingEditor>
-    <webMaster>noreply@genai-weekly.com (GenAI 周报团队)</webMaster>
+    <atom:link href="${siteUrl}/functions/v1/rss-feed?lang=${language}" rel="self" type="application/rss+xml" />
+    <managingEditor>noreply@genai-weekly.com (${team})</managingEditor>
+    <webMaster>noreply@genai-weekly.com (${team})</webMaster>
     <ttl>60</ttl>
     <image>
       <url>${siteUrl}/favicon.ico</url>
-      <title>GenAI 周报平台</title>
+      <title>${title}</title>
       <link>${siteUrl}</link>
     </image>
     ${items}
